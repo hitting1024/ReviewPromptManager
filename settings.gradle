@@ -1,0 +1,3 @@
+include ':ReviewPromptManager'
+include ':app'
+rootProject.name = "ReviewPromptManagerSample"
