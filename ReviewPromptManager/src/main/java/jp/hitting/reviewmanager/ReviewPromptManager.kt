@@ -8,6 +8,11 @@ import com.google.android.play.core.review.testing.FakeReviewManager
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * ReviewPromptManager supports to show review prompt (use Google Play In-App Review API).
+ *
+ * Show review prompt when the conditions of {@link #daysUntilPrompt} and {@link #usesUntilPrompt} are satisfied.
+ */
 object ReviewPromptManager {
     interface PromptListener {
         fun onComplete()
@@ -15,18 +20,43 @@ object ReviewPromptManager {
         fun onFailure(e: Exception)
     }
 
-    enum class PrefKey {
+    private enum class PrefKey {
         launchedDate, launchedCount, isReviewed
     }
 
+    /**
+     * Use in development.
+     *
+     * If {@code true}, {@link FakeReviewManager} is used.
+     */
     var IS_DEV = false
+
+    /**
+     * Use for debug.
+     *
+     * If {@code true}, {@link #shouldShowReviewPrompt(android.content.Context)} always returns {@code true}.
+     */
     var DEBUG = false
 
+    /**
+     * Days until showing review prompt
+     */
     var daysUntilPrompt = 1
+
+    /**
+     * Uses until showing review prompt
+     */
     var usesUntilPrompt = 10
 
     private val prefName = "jp.hitting.ReviewManager"
 
+    /**
+     * Count launched app.
+     *
+     * Call this method from first activity.
+     *
+     * @param context {@link android.content.Context}
+     */
     fun launched(context: Context) {
         val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
         val editor = pref.edit()
@@ -39,6 +69,17 @@ object ReviewPromptManager {
         editor.apply()
     }
 
+    /**
+     * Determine whether review prompt should be showed or not.
+     *
+     * You can use this method directly to show your original review dialog.
+     *
+     * @param context {@link android.content.Context}
+     *
+     * @return {@code true} if {@link DEBUG} is {@code true} or,
+     *              the number of launched app >= {@link usesUntilPrompt} and the number of days elapsed >= {@link daysUntilPrompt},
+     *         {@code false} otherwise
+     */
     fun shouldShowReviewPrompt(context: Context): Boolean {
         if (DEBUG) {
             return true
@@ -59,6 +100,12 @@ object ReviewPromptManager {
         return TimeUnit.DAYS.convert(diffMillis, TimeUnit.MILLISECONDS) >= daysUntilPrompt
     }
 
+    /**
+     * Show review prompt (use Google Play In-App Review API) if {@link #shouldShowReviewPrompt(android.content.Context)} is {@link true}.
+     *
+     * @param activity {@link android.app.Activity}
+     * @param listener {@link #PromptListener} (optional)
+     */
     fun showReviewPrompt(activity: Activity, listener: PromptListener? = null) {
         if (!shouldShowReviewPrompt(activity)) {
             return
