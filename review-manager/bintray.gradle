@@ -1,0 +1,44 @@
+apply plugin: 'com.jfrog.bintray'
+
+version = '0.0.1'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+//    archives javadocJar TODO
+    archives sourcesJar
+}
+
+// Bintray
+bintray {
+    user = project.getProperty("bintray.user")
+    key = project.getProperty("bintray.apiKey")
+    configurations = ['archives']
+
+    println user
+
+    pkg {
+        repo = 'maven'
+        name = 'ReviewPromptManager'
+        desc = 'ReviewPromptManager supports to show review prompt (use Google Play In-App Review API).'
+        websiteUrl = 'https://github.com/hitting1024/ReviewPromptManager'
+        issueTrackerUrl = 'https://github.com/hitting1024/ReviewPromptManager/issues'
+        vcsUrl = 'https://github.com/hitting1024/ReviewPromptManager.git'
+        licenses = ["MIT"]
+        publish = true
+        publicDownloadNumbers = true
+    }
+}
