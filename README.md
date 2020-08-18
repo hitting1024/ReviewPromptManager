@@ -1,6 +1,6 @@
 # ReviewPromptManager
 
-ReviewPromptManager supports to show review prompt
+ReviewPromptManager supports to show review prompt for Android applications
 (use [Google Play In-App Review API](https://developer.android.com/guide/playcore/in-app-review)).
 
 ## How To Get Started
