@@ -1,6 +1,12 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'maven-publish'
+}
+
+group = 'jp.hitting.lib'
+version = '0.0.1'
 
 android {
     compileSdkVersion 29
@@ -9,7 +15,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.0"
+        versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -21,6 +27,52 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = project.group
+                artifactId = 'review-manager'
+                version = project.version
+
+                pom {
+                    name = 'ReviewPromptManager'
+                    description = 'ReviewPromptManager supports to show review prompt (use Google Play In-App Review API).'
+                    url = 'https://github.com/hitting1024/ReviewPromptManager'
+                    licenses {
+                        license {
+                            name = "MIT License"
+                            url = "http://www.opensource.org/licenses/mit-license.php"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "hitting1024"
+                            name = "IOKA Masakazu"
+                            email = "hit0apps@gmail.com"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:git://github.com/hitting1024/ReviewPromptManager.git"
+                        developerConnection = "scm:git:ssh://github.com:hitting1024/ReviewPromptManager.git"
+                        url = "https://github.com/hitting1024/ReviewPromptManager/tree/master"
+                    }
+                }
+
+                afterEvaluate {
+                    from components.release
+                }
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
@@ -39,6 +91,3 @@ tasks.withType(Javadoc) {
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
 }
-
-apply from: 'install.gradle'
-apply from: 'bintray.gradle'
