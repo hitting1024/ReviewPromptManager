@@ -1,4 +1,4 @@
-package jp.hitting.reviewmanager
+package jp.hitting.lib.reviewmanager
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

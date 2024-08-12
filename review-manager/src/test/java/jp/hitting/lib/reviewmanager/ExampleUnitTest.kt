@@ -1,4 +1,4 @@
-package jp.hitting.reviewmanager
+package jp.hitting.lib.reviewmanager
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package jp.hitting.reviewmanager
+package jp.hitting.lib.reviewmanager
 
 import android.app.Activity
 import android.content.Context
